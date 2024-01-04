@@ -1,29 +1,46 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Beauty of Nature</title>
+    <title>Canvas Video Example</title>
 </head>
 <body>
-    <!-- Video element -->
-    <video id="myVideo" width="640" height="360" controls>
-        <source src="video/fabricvedio.mp4" type="video/mp4">
+    <!-- Hidden video element -->
+    <video id="myVideo" width="640" height="360" style="display: none;">
+        <source src="path_to_your_video.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
+
+    <!-- Canvas element -->
+    <canvas id="myCanvas" width="640" height="360"></canvas>
     <button id="playButton">Play/Pause Video</button>
 
     <!-- Inline JavaScript -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             var video = document.getElementById('myVideo');
+            var canvas = document.getElementById('myCanvas');
+            var context = canvas.getContext('2d');
             var playButton = document.getElementById('playButton');
 
+            // Play or pause the video when the button is clicked
             playButton.addEventListener('click', function () {
-                // Play or pause the video
                 if (video.paused) {
                     video.play();
                 } else {
                     video.pause();
                 }
+            });
+
+            // Draw the video frame to the canvas
+            video.addEventListener('play', function () {
+                function drawVideo() {
+                    if (!video.paused && !video.ended) {
+                        context.clearRect(0, 0, canvas.width, canvas.height);
+                        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                        requestAnimationFrame(drawVideo);
+                    }
+                }
+                drawVideo();
             });
         });
     </script>
