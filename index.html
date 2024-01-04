@@ -12,24 +12,37 @@
 
     <!-- Canvas element -->
     <canvas id="myCanvas" width="640" height="360"></canvas>
-    <button id="playButton">Play</button>
-    <button id="pauseButton">Pause</button>
+    <button id="playPauseButton">Play</button>
+    
     <!-- Inline JavaScript -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             var video = document.getElementById('myVideo');
             var canvas = document.getElementById('myCanvas');
             var context = canvas.getContext('2d');
-            var playButton = document.getElementById('playButton');
-            var pauseButton = document.getElementById('pauseButton');
-
-            // Play or pause the video when the button is clicked
-            playButton.addEventListener('click', function () {
+            var playPauseButton = document.getElementById('playPauseButton');
+            
+            // Function to toggle play/pause and update button text/icon
+            function togglePlayPause() {
                 if (video.paused) {
                     video.play();
+                    playPauseButton.textContent = "Pause";
                 } else {
                     video.pause();
+                    playPauseButton.textContent = "Play";
                 }
+            }
+
+            // Play or pause the video when the button is clicked
+            playPauseButton.addEventListener('click', togglePlayPause);
+
+            // Update button text/icon when video state changes
+            video.addEventListener('play', function () {
+                playPauseButton.textContent = "Pause";
+            });
+
+            video.addEventListener('pause', function () {
+                playPauseButton.textContent = "Play";
             });
 
             // Draw the video frame to the canvas
