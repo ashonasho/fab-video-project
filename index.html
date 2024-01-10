@@ -11,6 +11,7 @@
 </head>
 <body>
     <input type="file" id="videoUpload" accept="video/*">
+    <button id="playPauseButton">Play</button>
     <button id="toggleLoop">Toggle Loop</button>
     <button id="toggleMute">Toggle Mute</button>
     <br>
@@ -53,6 +54,20 @@
                     addVideo(e.target.result);
                 };
                 reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+
+        document.getElementById('playPauseButton').addEventListener('click', function() {
+            if (currentVideo && currentVideo.getElement()) {
+                var videoEl = currentVideo.getElement();
+                if (isPlaying) {
+                    videoEl.pause();
+                    this.textContent = 'Play';
+                } else {
+                    videoEl.play();
+                    this.textContent = 'Pause';
+                }
+                isPlaying = !isPlaying;
             }
         });
 
