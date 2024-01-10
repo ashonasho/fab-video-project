@@ -1,61 +1,72 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Canvas Video Example</title>
+    <title>Fabric.js Video Control Example</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.5.0/fabric.min.js"></script>
+    <style>
+        canvas {
+            border: 1px solid #ccc;
+        }
+    </style>
 </head>
 <body>
-    <!-- Hidden video element -->
-    <video id="myVideo" width="640" height="360" style="display: none;">
-        <source src="video/fabricvedio.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
+    <input type="file" id="videoUpload" accept="video/*">
+    <button id="toggleLoop">Toggle Loop</button>
+    <button id="toggleMute">Toggle Mute</button>
+    <br>
+    <canvas id="c" width="800" height="600"></canvas>
 
-    <!-- Canvas element -->
-    <canvas id="myCanvas" width="640" height="360"></canvas>
-    <button id="playPauseButton">Play</button>
-    
-    <!-- Inline JavaScript -->
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var video = document.getElementById('myVideo');
-            var canvas = document.getElementById('myCanvas');
-            var context = canvas.getContext('2d');
-            var playPauseButton = document.getElementById('playPauseButton');
-            
-            // Function to toggle play/pause and update button text/icon
-            function togglePlayPause() {
-                if (video.paused) {
-                    video.play();
-                    playPauseButton.textContent = "Pause";
-                } else {
-                    video.pause();
-                    playPauseButton.textContent = "Play";
-                }
+        var canvas = new fabric.Canvas('c');
+        var currentVideo = null;
+
+        function addVideo(url) {
+            var videoEl = document.createElement('video');
+            videoEl.src = url;
+            videoEl.crossOrigin = "anonymous";
+            videoEl.loop = true;
+            videoEl.muted = true;
+            videoEl.play();
+
+            videoEl.onloadeddata = function() {
+                var fabricVideo = new fabric.Image(videoEl, {
+                    left: 100,
+                    top: 100,
+                    angle: 0,
+                    objectCaching: false
+                });
+
+                canvas.add(fabricVideo);
+                currentVideo = fabricVideo;
+
+                fabric.util.requestAnimFrame(function render() {
+                    canvas.renderAll();
+                    fabric.util.requestAnimFrame(render);
+                });
+            };
+        }
+
+        document.getElementById('videoUpload').addEventListener('change', function(e) {
+            if (e.target.files && e.target.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    addVideo(e.target.result);
+                };
+                reader.readAsDataURL(e.target.files[0]);
             }
+        });
 
-            // Play or pause the video when the button is clicked
-            playPauseButton.addEventListener('click', togglePlayPause);
+        document.getElementById('toggleLoop').addEventListener('click', function() {
+            if (currentVideo && currentVideo.getElement()) {
+                currentVideo.getElement().loop = !currentVideo.getElement().loop;
+            }
+        });
 
-            // Update button text/icon when video state changes
-            video.addEventListener('play', function () {
-                playPauseButton.textContent = "Pause";
-            });
-
-            video.addEventListener('pause', function () {
-                playPauseButton.textContent = "Play";
-            });
-
-            // Draw the video frame to the canvas
-            video.addEventListener('play', function () {
-                function drawVideo() {
-                    if (!video.paused && !video.ended) {
-                        context.clearRect(0, 0, canvas.width, canvas.height);
-                        context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                        requestAnimationFrame(drawVideo);
-                    }
-                }
-                drawVideo();
-            });
+        document.getElementById('toggleMute').addEventListener('click', function() {
+            if (currentVideo && currentVideo.getElement()) {
+                var videoEl = currentVideo.getElement();
+                videoEl.muted = !videoEl.muted;
+            }
         });
     </script>
 </body>
