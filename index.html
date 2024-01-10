@@ -27,8 +27,11 @@
             videoEl.crossOrigin = "anonymous";
             videoEl.loop = true;
             videoEl.muted = true;
-            videoEl.play();
 
+            videoEl.width = canvas.width; // Set to match canvas width
+            videoEl.height = canvas.height; // Set to match canvas height
+
+           
             videoEl.onloadeddata = function() {
                 var fabricVideo = new fabric.Image(videoEl, {
                     left: 100,
