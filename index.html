@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Fabric.js Video Control Example</title>
+    <title>Fabric.js Video </title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.5.0/fabric.min.js"></script>
     <style>
         canvas {
@@ -20,13 +20,14 @@
     <script>
         var canvas = new fabric.Canvas('c');
         var currentVideo = null;
+        var isPlaying = false;
 
         function addVideo(url) {
             var videoEl = document.createElement('video');
             videoEl.src = url;
             videoEl.crossOrigin = "anonymous";
             videoEl.loop = true;
-            videoEl.muted = true;
+            videoEl.muted = false;
             videoEl.width = canvas.width; // Set to match canvas width
             videoEl.height = canvas.height; // Set to match canvas height
             videoEl.play();
