@@ -7,6 +7,16 @@
         canvas {
             border: 1px solid #ccc;
         }
+        #videoContainer {
+            position: relative;
+            width: 800px; /* Match the canvas width */
+        }
+        #trackButton {
+            position: absolute;
+            bottom: -30px; /* Adjust as needed */
+            left: 50%;
+            transform: translateX(-50%);
+        }
     </style>
 </head>
 <body>
@@ -19,6 +29,7 @@
     <button id="redo">Redo</button>
     <br>
     <canvas id="c" width="800" height="600"></canvas>
+    <button id="trackButton">Track</button>
 
     <script>
         var canvas = new fabric.Canvas('c');
@@ -139,6 +150,11 @@
                 this.textContent = 'Stop Drawing';
             }
             isDrawingMode = !isDrawingMode;
+        });
+
+        document.getElementById('trackButton').addEventListener('click', function() {
+            // Add your tracking functionality here
+            console.log('Track button clicked');
         });
 
     </script>
