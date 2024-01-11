@@ -13,7 +13,7 @@
     <input type="file" id="videoUpload" accept="video/*">
     <button id="playPauseButton">Play</button>
     <button id="toggleLoop">Toggle Loop</button>
-    <button id="toggleMute">Toggle Mute</button>
+    <button id="Mute">Mute</button>
     <br>
     <canvas id="c" width="800" height="600"></canvas>
 
@@ -80,7 +80,7 @@
             }
         });
 
-        document.getElementById('toggleMute').addEventListener('click', function() {
+        document.getElementById('Mute').addEventListener('click', function() {
             if (currentVideo && currentVideo.getElement()) {
                 var videoEl = currentVideo.getElement();
                 videoEl.muted = !videoEl.muted;
