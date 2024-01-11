@@ -15,6 +15,8 @@
     <button id="Loop">Loop</button>
     <button id="Mute">Mute</button>
     <button id="toggleDrawing">Toggle Drawing</button>
+    <button id="undo">Undo</button>
+    <button id="redo">Redo</button>
     <br>
     <canvas id="c" width="800" height="600"></canvas>
 
@@ -23,6 +25,8 @@
         var currentVideo = null;
         var isPlaying = false;
         var isDrawingMode = false;
+        var state = [];
+        var mods = 0;
 
         function addVideo(url) {
             var videoEl = document.createElement('video');
@@ -51,6 +55,41 @@
                 });
             };
         }
+
+        
+        function updateCanvasState() {
+            if (mods < state.length) {
+                state = state.slice(0, mods + 1);
+            }
+            state.push(JSON.stringify(canvas));
+            mods++;
+        }
+
+        canvas.on('object:modified', function() {
+            updateCanvasState();
+        });
+
+        canvas.on('object:added', function() {
+            updateCanvasState();
+        });
+
+        document.getElementById('undo').onclick = function() {
+            if (mods > 0) {
+                canvas.clear().renderAll();
+                canvas.loadFromJSON(state[mods - 1]);
+                canvas.renderAll();
+                mods -= 1;
+            }
+        };
+
+        document.getElementById('redo').onclick = function() {
+            if (mods < state.length - 1) {
+                canvas.clear().renderAll();
+                canvas.loadFromJSON(state[mods + 1]);
+                canvas.renderAll();
+                mods += 1;
+            }
+        };
 
         document.getElementById('videoUpload').addEventListener('change', function(e) {
             if (e.target.files && e.target.files[0]) {
