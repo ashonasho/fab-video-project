@@ -12,8 +12,9 @@
 <body>
     <input type="file" id="videoUpload" accept="video/*">
     <button id="playPauseButton">Play</button>
-    <button id="toggleLoop">Toggle Loop</button>
+    <button id="Loop">Loop</button>
     <button id="Mute">Mute</button>
+    <button id="toggleDrawing">Toggle Drawing</button>
     <br>
     <canvas id="c" width="800" height="600"></canvas>
 
@@ -74,7 +75,7 @@
             }
         });
 
-        document.getElementById('toggleLoop').addEventListener('click', function() {
+        document.getElementById('Loop').addEventListener('click', function() {
             if (currentVideo && currentVideo.getElement()) {
                 currentVideo.getElement().loop = !currentVideo.getElement().loop;
             }
@@ -86,6 +87,20 @@
                 videoEl.muted = !videoEl.muted;
             }
         });
+
+        document.getElementById('toggleDrawing').addEventListener('click', function() {
+            if (isDrawingMode) {
+                // Toggle to selection mode
+                canvas.isDrawingMode = false;
+                this.textContent = 'Start Drawing';
+            } else {
+                // Toggle to drawing mode
+                canvas.isDrawingMode = true;
+                this.textContent = 'Stop Drawing';
+            }
+            isDrawingMode = !isDrawingMode;
+        });
+
     </script>
 </body>
 </html>
