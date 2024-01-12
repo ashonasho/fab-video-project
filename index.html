@@ -111,22 +111,24 @@
 
 
         document.getElementById('undo').onclick = function() {
-            if (mods > 0) {
+            if (mods > 1) {
+                mods -= 1;
                 canvas.clear().renderAll();
-                canvas.loadFromJSON(state[mods - 1]);
+                canvas.loadFromJSON(state[mods - 1]),function() {
                 canvas.renderAll();
                 mods -= 1;
             }
         };
 
         document.getElementById('redo').onclick = function() {
-            if (mods < state.length - 1) {
-                canvas.clear().renderAll();
-                canvas.loadFromJSON(state[mods + 1]);
+        if (mods < state.length) {
+            canvas.clear().renderAll();
+            canvas.loadFromJSON(state[mods], function() {
                 canvas.renderAll();
                 mods += 1;
-            }
-        };
+            });
+        }
+    };
 
         document.getElementById('videoUpload').addEventListener('change', function(e) {
             if (e.target.files && e.target.files[0]) {
