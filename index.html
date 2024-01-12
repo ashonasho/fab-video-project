@@ -11,29 +11,7 @@
             position: relative;
             width: 800px; /* Match the canvas width */
         }
-
-        .video-container {
-            text-align: center;
-            padding: 20px;
-        }
-
-        #myVideo {
-            width: 100%;
-            max-width: 750px;
-        }
-
-        #seekBar {
-            width: 100%;
-            max-width: 750px;
-            margin: 10px 0;
-            height: 5px;
-            background-color: #ddd;
-        }
-
-        #seekBar input[type="range"] {
-            width: 100%;
-            cursor: pointer;
-        }
+        
  
     </style>
 </head>
@@ -48,18 +26,10 @@
   
     <br>
     <canvas id="c" width="800" height="600"></canvas>
-
-   
-        <video id="myVideo" controls>
-            <source src="path_to_your_video.mp4" type="video/mp4">
-            Your browser does not support HTML5 video.
-        </video>
-       
-            <input type="range" id="seekSlider" value="0" step="0.1">
     
 
     <script>
-        var canvas = new fabric.Canvas('c');
+        var canvas = new fabric.Canvas('c', { selection: true });
         var currentVideo = null;
         var isPlaying = false;
         var isDrawingMode = false;
@@ -81,7 +51,9 @@
                     left: 100,
                     top: 100,
                     angle: 0,
-                    objectCaching: false
+                    objectCaching: false,
+                    selectable: true, // Make the video selectable
+                    hasControls: true // Enable controls for moving/scaling
                 });
 
                 canvas.add(fabricVideo);
@@ -178,22 +150,7 @@
             }
             isDrawingMode = !isDrawingMode;
         });
-        document.addEventListener('DOMContentLoaded', function() {
-        const video = document.getElementById('myVideo');
-        const seekSlider = document.getElementById('seekSlider');
 
-        video.addEventListener('loadedmetadata', function() {
-            seekSlider.max = video.duration;
-        });
-
-        video.addEventListener('timeupdate', function() {
-            seekSlider.value = video.currentTime;
-        });
-
-        seekSlider.addEventListener('input', function() {
-            video.currentTime = seekSlider.value;
-        });
-    });
  
 
     </script>
