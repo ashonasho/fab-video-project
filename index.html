@@ -165,16 +165,9 @@
         });
 
         document.getElementById('toggleDrawing').addEventListener('click', function() {
-            if (isDrawingMode) {
-                // Toggle to selection mode
-                canvas.isDrawingMode = false;
-                this.textContent = 'Start Drawing';
-            } else {
-                // Toggle to drawing mode
-                canvas.isDrawingMode = true;
-                this.textContent = 'Stop Drawing';
-            }
             isDrawingMode = !isDrawingMode;
+            canvas.isDrawingMode = isDrawingMode;
+            this.textContent = isDrawingMode ? 'Stop Drawing' : 'Start Drawing';
         });
 
  
