@@ -11,6 +11,12 @@
             position: relative;
             width: 800px; /* Match the canvas width */
         }
+  
+        #videoSeekBar {
+            width: 100%;
+            max-width: 800px; /* Match the canvas width */
+            margin: 10px 0;
+        }
         
  
     </style>
@@ -23,18 +29,20 @@
     <button id="toggleDrawing">Toggle Drawing</button>
     <button id="undo">Undo</button>
     <button id="redo">Redo</button>
-  
+    <br>
+    <input type="range" id="videoSeekBar" value="0" min="0" step="0.1">
     <br>
     <canvas id="c" width="800" height="600"></canvas>
     
 
     <script>
-        var canvas = new fabric.Canvas('c', { selection: true });
+        var canvas = new fabric.Canvas('c');
         var currentVideo = null;
         var isPlaying = false;
         var isDrawingMode = false;
         var state = [];
         var mods = 0;
+        var videoSeekBar = document.getElementById('videoSeekBar');
 
         function addVideo(url) {
             var videoEl = document.createElement('video');
@@ -51,9 +59,7 @@
                     left: 100,
                     top: 100,
                     angle: 0,
-                    objectCaching: false,
-                    selectable: true, // Make the video selectable
-                    hasControls: true // Enable controls for moving/scaling
+                    objectCaching: false
                 });
 
                 canvas.add(fabricVideo);
@@ -66,6 +72,17 @@
             };
         }
 
+        videoSeekBar.addEventListener('input', function() {
+            if (currentVideo && currentVideo.getElement()) {
+                currentVideo.getElement().currentTime = videoSeekBar.value;
+            }
+        });
+        function updateVideoSeekBar() {
+            if (currentVideo && currentVideo.getElement()) {
+                videoSeekBar.value = currentVideo.getElement().currentTime;
+            }
+        }
+        setInterval(updateVideoSeekBar, 100);
         
         function updateCanvasState() {
             if (mods < state.length) {
