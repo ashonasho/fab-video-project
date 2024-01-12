@@ -23,9 +23,6 @@
 </head>
 <body>
     <input type="file" id="videoUpload" accept="video/*">
-   
-
-    
     <button id="toggleDrawing">Toggle Drawing</button>
     <button id="undo">Undo</button>
     <button id="redo">Redo</button>
@@ -111,16 +108,16 @@
 
 
         document.getElementById('undo').onclick = function() {
-            if (mods > 1) {
-                mods -= 1;
-                canvas.clear().renderAll();
-                canvas.loadFromJSON(state[mods - 1]),function() {
+        if (mods > 1) {
+            mods -= 1;
+            canvas.clear().renderAll();
+            canvas.loadFromJSON(state[mods - 1], function() {
                 canvas.renderAll();
-                mods -= 1;
-            }
-        };
+            });
+        }
+    };
 
-        document.getElementById('redo').onclick = function() {
+    document.getElementById('redo').onclick = function() {
         if (mods < state.length) {
             canvas.clear().renderAll();
             canvas.loadFromJSON(state[mods], function() {
