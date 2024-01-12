@@ -72,6 +72,15 @@
             };
         }
 
+
+        
+        function updateCanvasState() {
+            if (mods < state.length) {
+                state = state.slice(0, mods + 1);
+            }
+            state.push(JSON.stringify(canvas));
+            mods++;
+        }
         videoSeekBar.addEventListener('input', function() {
             if (currentVideo && currentVideo.getElement()) {
                 currentVideo.getElement().currentTime = videoSeekBar.value;
@@ -83,14 +92,6 @@
             }
         }
         setInterval(updateVideoSeekBar, 100);
-        
-        function updateCanvasState() {
-            if (mods < state.length) {
-                state = state.slice(0, mods + 1);
-            }
-            state.push(JSON.stringify(canvas));
-            mods++;
-        }
 
         canvas.on('object:modified', function() {
             updateCanvasState();
