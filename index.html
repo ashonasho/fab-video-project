@@ -11,12 +11,30 @@
             position: relative;
             width: 800px; /* Match the canvas width */
         }
-        #trackButton {
-            position: absolute;
-            bottom: -30px; /* Adjust as needed */
-            left: 50%;
-            transform: translateX(-50%);
+
+        .video-container {
+            text-align: center;
+            padding: 20px;
         }
+
+        #myVideo {
+            width: 100%;
+            max-width: 750px;
+        }
+
+        #seekBar {
+            width: 100%;
+            max-width: 750px;
+            margin: 10px 0;
+            height: 5px;
+            background-color: #ddd;
+        }
+
+        #seekBar input[type="range"] {
+            width: 100%;
+            cursor: pointer;
+        }
+ 
     </style>
 </head>
 <body>
@@ -27,9 +45,19 @@
     <button id="toggleDrawing">Toggle Drawing</button>
     <button id="undo">Undo</button>
     <button id="redo">Redo</button>
-    <button id="trackButton">Track</button>
+  
     <br>
     <canvas id="c" width="800" height="600"></canvas>
+
+    <div class="video-container">
+        <video id="myVideo" controls>
+            <source src="path_to_your_video.mp4" type="video/mp4">
+            Your browser does not support HTML5 video.
+        </video>
+        <div id="seekBar">
+            <input type="range" id="seekSlider" value="0" step="0.1">
+        </div>
+    </div>
     
 
     <script>
@@ -152,11 +180,23 @@
             }
             isDrawingMode = !isDrawingMode;
         });
+        document.addEventListener('DOMContentLoaded', function() {
+        const video = document.getElementById('myVideo');
+        const seekSlider = document.getElementById('seekSlider');
 
-        document.getElementById('trackButton').addEventListener('click', function() {
-            // Add your tracking functionality here
-            console.log('Track button clicked');
+        video.addEventListener('loadedmetadata', function() {
+            seekSlider.max = video.duration;
         });
+
+        video.addEventListener('timeupdate', function() {
+            seekSlider.value = video.currentTime;
+        });
+
+        seekSlider.addEventListener('input', function() {
+            video.currentTime = seekSlider.value;
+        });
+    });
+ 
 
     </script>
 </body>
