@@ -23,18 +23,20 @@
 </head>
 <body>
     <input type="file" id="videoUpload" accept="video/*">
-    <button id="playPauseButton">Play</button>
-    <button id="Loop">Loop</button>
-    <button id="Mute">Mute</button>
+   
+
+    
     <button id="toggleDrawing">Toggle Drawing</button>
     <button id="undo">Undo</button>
     <button id="redo">Redo</button>
     <br>
+    <canvas id="c" width="800" height="600"></canvas>
+    <br>
     <input type="range" id="videoSeekBar" value="0" min="0" step="0.1">
     <br>
-    <canvas id="c" width="800" height="600"></canvas>
-    
-
+    <button id="playPauseButton">Play</button> 
+    <button id="Mute">Mute</button> 
+    <button id="Loop">Loop</button>
     <script>
         var canvas = new fabric.Canvas('c');
         var currentVideo = null;
@@ -75,12 +77,26 @@
 
         
         function updateCanvasState() {
-            if (mods < state.length) {
-                state = state.slice(0, mods + 1);
-            }
-            state.push(JSON.stringify(canvas));
-            mods++;
+        // Remove states ahead of the current state to handle new actions after undo
+        if (mods < state.length) {
+            state = state.slice(0, mods);
         }
+        state.push(JSON.stringify(canvas));
+        mods++;
+    }
+
+        
+    canvas.on('object:modified', function() {
+        updateCanvasState();
+    });
+
+    canvas.on('object:added', function() {
+        updateCanvasState();
+    });
+
+    canvas.on('object:removed', function() {
+        updateCanvasState();
+    });
         videoSeekBar.addEventListener('input', function() {
             if (currentVideo && currentVideo.getElement()) {
                 currentVideo.getElement().currentTime = videoSeekBar.value;
@@ -93,13 +109,6 @@
         }
         setInterval(updateVideoSeekBar, 100);
 
-        canvas.on('object:modified', function() {
-            updateCanvasState();
-        });
-
-        canvas.on('object:added', function() {
-            updateCanvasState();
-        });
 
         document.getElementById('undo').onclick = function() {
             if (mods > 0) {
